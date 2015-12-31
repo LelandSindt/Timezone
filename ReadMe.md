@@ -1,32 +1,35 @@
 #Arduino Timezone Library v1.0
-https://github.com/JChristensen/Timezone  
+https://github.com/LelandSindt/Timezone  
 ReadMe file  
 Jack Christensen Mar 2012  
+Leland Sindt Dec 2015
 
 ![CC BY-SA](http://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-sa.png)
 
 ##Introduction
+
+This Fork removes the eeprom references to make it compatible with the esp8266 and is modified from https://github.com/JChristensen/Timezone 
+
 The **Timezone** library is designed to work in conjunction with the [Arduino Time library](http://www.arduino.cc/playground/Code/Time).  The Time library must be installed and referenced in your sketch with `#include <Time.h>`.  This documentation assumes some familiarity with the Time library.
 
 The primary aim of the **Timezone** library is to convert Universal Coordinated Time (UTC) to the correct local time, whether it is daylight saving time (a.k.a. summer time) or standard time. The time source could be a GPS receiver, an NTP server, or a Real-Time Clock (RTC) set to UTC.  But whether a hardware RTC or other time source is even present is immaterial; although the Time library can function as a software RTC without additional hardware, its accuracy is dependent on the accuracy of the microcontroller's system clock.
 
 The **Timezone** library implements two objects to facilitate time zone conversions:
 - A **TimeChangeRule** object describes when local time changes to daylight (summer) time, or to standard time, for a particular locale.
-- A **Timezone** object uses **TimeChangeRule**s to perform conversions and related functions.  It can also write its **TimeChangeRule**s to EEPROM, or read them from EEPROM.  Multiple time zones can be represented by defining multiple **Timezone** objects.
+- A **Timezone** object uses **TimeChangeRule**s to perform conversions and related functions.  Multiple time zones can be represented by defining multiple **Timezone** objects.
 
 ##Installation
 To use the **Timezone** library:  
-- Go to https://github.com/JChristensen/Timezone and click the **Download ZIP** button to download the repository as a ZIP file to a convenient location on your PC.
+- Go to https://github.com/LelandSindt/Timezone and click the **Download ZIP** button to download the repository as a ZIP file to a convenient location on your PC.
 - Uncompress the downloaded file.  This will result in a folder containing all the files for the library, that has a name that includes the branch name, for example **Timezone-master**.
 - Rename the folder to just **Timezone**.
-- Copy the renamed folder to the Arduino sketchbook\libraries folder.
+- Copy the renamed folder to the Arduino\libraries\ folder.
 
 ##Examples
 The following example sketches are included with the **Timezone** library:
-- **Clock:** A simple self-adjusting clock for a single time zone.  **TimeChangeRule**s may be optionally read from EEPROM.
+- **Clock:** A simple self-adjusting clock for a single time zone.  
 - **HardwareRTC:** A self-adjusting clock for one time zone using an external real-time clock, either a DS1307 or DS3231 (e.g. Chronodot) which is set to UTC.  
 - **WorldClock:** A self-adjusting clock for multiple time zones.
-- **WriteRules:** A sketch to write **TimeChangeRule**s to EEPROM.
 
 ##Coding TimeChangeRules
 Normally these will be coded in pairs for a given time zone: One rule to describe when daylight (summer) time starts, and one to describe when standard time starts.
@@ -71,8 +74,6 @@ There are two ways to define **Timezone** objects.
 By first defining **TimeChangeRule**s (as above) and giving the daylight time rule and the standard time rule (assuming usEDT and usEST defined as above):  
 `Timezone usEastern(usEDT, usEST);`
 
-By reading rules previously stored in EEPROM.  This reads both the daylight and standard time rules previously stored at EEPROM address 100:  
-`Timezone usPacific(100);`
 
 Note that **TimeChangeRule**s require 12 bytes of storage each, so the pair of rules associated with a Timezone object requires 24 bytes total.  This could possibly change in future versions of the library.  The size of a **TimeChangeRule** can be checked with `sizeof(usEDT)`.
 
@@ -139,19 +140,6 @@ true or false *(boolean)*
 
 ###void readRules(int address);
 ###void writeRules(int address);
-#####Description
-These functions read or write a **Timezone** object's two **TimeChangeRule**s from or to EEPROM.
-#####Syntax
-`myTZ.readRules(address);`  
-`myTZ.writeRules(address);`  
-#####Parameters
-***address:*** The beginning EEPROM address to write to or read from *(int)*
-#####Returns
-None.
-#####Example
-`usEastern.writeRules(100);  //write rules beginning at EEPROM address 100`
-
-###time_t toUTC(time_t local);
 #####Description
 Converts the given local time to UTC time.
 

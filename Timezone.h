@@ -45,8 +45,6 @@ class Timezone
         time_t toUTC(time_t local);
         boolean utcIsDST(time_t utc);
         boolean locIsDST(time_t local);
-        void readRules(int address);
-        void writeRules(int address);
 
     private:
         void calcTimeChanges(int yr);
